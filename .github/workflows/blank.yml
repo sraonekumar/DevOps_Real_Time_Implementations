@@ -40,9 +40,11 @@ jobs:
         run: npm install
 
       - name: Run the tests
+        env: 
+          CI: true
         working-directory: ./react-shop
         # As i dont have any test specified just ignoring this step with echo
-        run: echo "npm test"
+        run: npm test
 
   Docker-Linting-Build:
     needs: [Code-Build-Test]
