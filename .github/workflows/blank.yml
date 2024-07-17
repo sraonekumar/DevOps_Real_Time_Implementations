@@ -122,4 +122,4 @@ jobs:
         with:
           app_name: react-app
           image: msravankumar/sap:main
-          namespace: sap-assessments
+          namespace: sraonekumar-dev
