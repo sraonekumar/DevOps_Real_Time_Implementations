@@ -117,3 +117,9 @@ jobs:
 
       # Optional - this sets your Kubernetes context's current namespace after logging in.
           namespace: test-hello
+      - name: Create and expose app
+        uses: redhat-actions/oc-new-app@v1
+        with:
+          app_name: react-app
+          image: msravankumar/sap:main
+          namespace: sap-assessments
