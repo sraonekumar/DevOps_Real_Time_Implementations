@@ -116,7 +116,13 @@ jobs:
         # certificate_authority_data: ${{ secrets.CA_DATA }}
 
       # Optional - this sets your Kubernetes context's current namespace after logging in.
-          namespace: test-hello
+          namespace: sraonekumar-dev
       - name: Create and expose app
-        uses: redhat-actions/oc-new-app@v1
-        run: oc new-app --name react-app --image msravankumar/sap:main -n sraonekumar-dev
+        run: |
+            oc project sraonekumar-dev
+
+            oc get pods
+
+            oc new-app --name react-app --image msravankumar/sap:main -n sraonekumar-dev
+
+            oc get pods 
