@@ -119,7 +119,4 @@ jobs:
           namespace: test-hello
       - name: Create and expose app
         uses: redhat-actions/oc-new-app@v1
-        with:
-          app_name: react-app
-          image: msravankumar/sap:main
-          namespace: sraonekumar-dev
+        run: oc new-app --name react-app --image msravankumar/sap:main -n sraonekumar-dev
