@@ -6,10 +6,10 @@ describe("Sample application test", () => {
     // render(<App />)
     expect(2 + 2).toBe(4);
   });
-  test("App Test 2", () => {
-    // render(<App />)
-    expect(2 + 2).toBe(3);
-  });
+//   test("App Test 2", () => {
+//     // render(<App />)
+//     expect(2 + 2).toBe(3);
+//   });
 });
 
 
