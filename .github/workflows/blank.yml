@@ -67,11 +67,18 @@ jobs:
           username: ${{ secrets.REPO_USER }}
           password: ${{ secrets.REPO_PASS }}
 
-      - name: Build and push Main web app container image to registry
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ secrets.REPO_USER }}/sap
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
+          context: "{{defaultContext}}"
           push: true
-          tags: ${{ secrets.USERNAME }}/sap:latest
-          file: ./Dockerfile
-
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
