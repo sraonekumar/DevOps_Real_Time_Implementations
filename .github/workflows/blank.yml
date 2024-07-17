@@ -36,9 +36,11 @@ jobs:
       - run: npm --version
 
       - name: Install dependencies
+        working-directory: ./react-shop
         run: npm install
 
       - name: Run the tests
+        working-directory: ./react-shop
         run: npm test
 
   Docker-Linting-Build:
