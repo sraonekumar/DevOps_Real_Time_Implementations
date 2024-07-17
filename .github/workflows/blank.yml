@@ -44,7 +44,7 @@ jobs:
           CI: true
         working-directory: ./react-shop
         # As i dont have any test specified just ignoring this step with echo
-        run: npm test
+        run: CI=true npm test
 
   Docker-Linting-Build:
     needs: [Code-Build-Test]
