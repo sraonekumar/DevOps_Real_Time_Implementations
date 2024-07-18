@@ -83,3 +83,74 @@
       service:
         name: nginx
         state: restarted
+
+
+# Installing node exporter to moniter and scrape metric to prometheus 
+
+  tasks:
+    - name: Download Node Exporter archive
+      get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz"
+        dest: "/tmp/node_exporter.tar.gz"
+        mode: 0644
+
+    - name: Extract Node Exporter archive
+      ansible.builtin.unarchive:
+        src: "/tmp/node_exporter.tar.gz"
+        dest: "/opt"
+        remote_src: yes
+
+    - name: Create Node Exporter symlink
+      ansible.builtin.file:
+        src: "/opt/node_exporter-1.2.2.linux-amd64/node_exporter"
+        dest: "/usr/local/bin/node_exporter"
+        state: link
+
+    - name: Configure Node Exporter as a service
+      ansible.builtin.template:
+        src: node_exporter.service.j2  # Template file for Node Exporter service
+        dest: "/etc/systemd/system/node_exporter.service"
+      notify: restart node exporter
+
+    - name: Ensure Node Exporter service is started and enabled
+      ansible.builtin.service:
+        name: node_exporter
+        state: started
+        enabled: yes
+
+#  Install Log Stash To scrape to metrics to elk stack 
+
+
+  tasks:
+    - name: Add Logstash APT repository key
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+
+    - name: Add Logstash APT repository
+      apt_repository:
+        repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+        state: present
+        filename: elastic-7.x
+
+    - name: Install Logstash
+      apt:
+        name: logstash
+        state: present
+
+    - name: Ensure Logstash service is started and enabled
+      service:
+        name: logstash
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart node exporter
+      ansible.builtin.systemd:
+        name: node_exporter
+        state: restarted
+
+    - name: Restart Logstash
+      service:
+        name: logstash
+        state: restarted
