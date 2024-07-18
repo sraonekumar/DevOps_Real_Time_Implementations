@@ -43,9 +43,12 @@ jobs:
       
       - name: Terraform init
         run: terraform init
+        working-directory: ./terrform-iaac
       
       - name: Terraform validate
         run: terraform validate
+        working-directory: ./terrform-iaac
       
       - name: Terraform plan
         run: terraform plan
+        working-directory: ./terrform-iaac
