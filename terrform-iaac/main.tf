@@ -1,3 +1,4 @@
+# terrform scripts
 resource "aws_vpc" "sap-vpc" {
   cidr_block = var.cidr-range
 }
