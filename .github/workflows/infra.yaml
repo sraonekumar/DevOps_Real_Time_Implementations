@@ -52,3 +52,35 @@ jobs:
       - name: Terraform plan
         run: terraform plan
         working-directory: ./terrform-iaac
+
+      - name: Terraform apply 
+        run: terraform apply
+        working-directory: ./terrform-iaac
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+        working-directory: ./terrform-iaac
+
+      - name: Get Terraform output and save to inventory.ini
+        run: |
+          INSTANCE_IP=$(terraform output --raw instance_public_ip)
+          echo "[ec2_instance]" > /ansible-config/inventory.ini
+          echo "instance ansible_host=${INSTANCE_IP}" >> /ansible-config/inventory.ini
+        working-directory: ./terrform-iaac
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook -i ./ansible-config/inventory.ini -u ubuntu ./ansible-config/playbook.yml
+
+
+      
