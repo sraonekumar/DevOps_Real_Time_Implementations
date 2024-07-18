@@ -1,0 +1,83 @@
+---
+- name: Deploy React App
+  hosts: all
+  become: yes
+
+  vars:
+    react_app_repo: "https://github.com/sraonekumar/DevOps_Real_Time_Implementations.git"
+    react_app_dir: "~/app"
+
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install necessary packages
+      apt:
+        name:
+          - nginx
+          - git
+          - nodejs
+          - npm
+        state: present
+
+    - name: Clone the React app from GitHub
+      git:
+        repo: "{{ react_app_repo }}"
+        dest: "{{ react_app_dir }}"
+        update: yes
+
+    - name: Install Node.js dependencies
+      npm:
+        path: "{{ react_app_dir }}/react-shop"
+        state: present
+        production: yes
+
+    - name: Build the React app
+      command: npm run build
+      args:
+        chdir: "{{ react_app_dir }}/react-shop"
+
+    - name: Copy the built app to Nginx html directory
+      copy:
+        src: "{{ react_app_dir }}/react-shop/build/"
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: 0755
+        remote_src: yes
+
+    - name: Configure Nginx to serve the React app
+      copy:
+        content: |
+          server {
+              listen 80;
+              server_name yourdomain.com;
+
+              root /var/www/html;
+              index index.html index.htm;
+
+              location / {
+                  try_files $uri $uri/ /index.html;
+              }
+          }
+        dest: /etc/nginx/sites-available/react_app
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Remove default Nginx configuration
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Enable React app Nginx configuration
+      file:
+        src: /etc/nginx/sites-available/react_app
+        dest: /etc/nginx/sites-enabled/react_app
+        state: link
+    - name: Restart Nginx to apply changes
+      service:
+        name: nginx
+        state: restarted
