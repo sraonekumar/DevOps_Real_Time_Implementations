@@ -75,7 +75,7 @@ resource "aws_route_table_association" "prod-crta-public-subnet-1"{
 
 resource "aws_key_pair" "ec2-ssh-key" {
     key_name = "key-pair"
-    public_key = file("./id_rsa.pub")
+    public_key = file(var.key_path)
 }
 
 resource "aws_instance" "vm1" {
