@@ -37,5 +37,4 @@ override.tf.json
 terraform.rc
 
 # Ignore ssh keys
-id_rsa*
-id_rsa.pub*
+*.rsa
