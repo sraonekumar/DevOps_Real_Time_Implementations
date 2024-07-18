@@ -54,7 +54,7 @@ jobs:
         working-directory: ./terrform-iaac
 
       - name: Terraform apply 
-        run: terraform apply
+        run: terraform apply -auto-approve
         working-directory: ./terrform-iaac
 
       - name: Apply Terraform
