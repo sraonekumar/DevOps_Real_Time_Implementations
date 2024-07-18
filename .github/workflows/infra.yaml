@@ -57,9 +57,9 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./terrform-iaac
 
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
-        working-directory: ./terrform-iaac
+      # - name: Apply Terraform
+      #   run: terraform apply -auto-approve
+      #   working-directory: ./terrform-iaac
 
       - name: Get Terraform output and save to inventory.ini
         run: |
@@ -76,17 +76,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
 
-      - name: Set up SSH KEY FOR AWS
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
+      # - name: Set up SSH KEY FOR AWS
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa
+      #     chmod 400 ~/.ssh/id_rsa
 
 
-      - name: Run Ansible playbook
-        run: |
-          echo "[ec2_instance]" > /ansible-config/inventory.ini
-          echo "instance ansible_host=${INSTANCE_IP}" >> ./ansible-config/inventory.ini
-          ansible-playbook --private-key ~/.ssh/id_rsa -i ./ansible-config/inventory.ini  -u ubuntu ./ansible-config/playbook.yaml -y
+      # - name: Run Ansible playbook
+      #   run: |
+      #     echo "[ec2_instance]" > /ansible-config/inventory.ini
+      #     echo "instance ansible_host=${INSTANCE_IP}" >> ./ansible-config/inventory.ini
+      #     ansible-playbook --private-key ~/.ssh/id_rsa -i ./ansible-config/inventory.ini  -u ubuntu ./ansible-config/playbook.yaml -y
 
       
