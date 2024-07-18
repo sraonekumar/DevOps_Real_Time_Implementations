@@ -3,5 +3,5 @@ variable "cidr-range" {
 }
 
 variable "key_path" {
-  default = "~/.ssh/id_rsa"
+  default = "~/.ssh/id_rsa.pub"
 }

@@ -24,8 +24,8 @@ jobs:
       - name: Set up SSH KEY FOR AWS
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PUB_KEY }}" | base64 -d > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUB_KEY }}" | base64 -d > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa.pub
 
       - name: Configure AWS credentials
         run: |
@@ -76,11 +76,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
 
+      - name: Set up SSH KEY FOR AWS
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+
       - name: Run Ansible playbook
         run: |
           echo "[ec2_instance]" > /ansible-config/inventory.ini
           echo "instance ansible_host=${INSTANCE_IP}" >> ./ansible-config/inventory.ini
-          ansible-playbook -i ./ansible-config/inventory.ini -u ubuntu ./ansible-config/playbook.yml
-
+          ansible-playbook --private-key ~/.ssh/id_rsa -i ./ansible-config/inventory.ini  -u ubuntu ./ansible-config/playbook.yaml -y
 
       

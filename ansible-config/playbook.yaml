@@ -5,7 +5,7 @@
 
   vars:
     react_app_repo: "https://github.com/sraonekumar/DevOps_Real_Time_Implementations.git"
-    react_app_dir: "~/app"
+    react_app_dir: "/app"
 
   tasks:
     - name: Update and upgrade apt packages
@@ -22,11 +22,13 @@
           - npm
         state: present
 
+
     - name: Clone the React app from GitHub
       git:
         repo: "{{ react_app_repo }}"
         dest: "{{ react_app_dir }}"
         update: yes
+
 
     - name: Install Node.js dependencies
       npm:
