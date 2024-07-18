@@ -2,11 +2,9 @@ name: Terraform Workflow
 
 on:
   push:
-    branches:
-      - iaac/config
+    branches: ["iaac/config"]
   pull_request:
-    branches:
-      - iaac/config
+    branches: ["iaac/config"]
   
 jobs:
   terraform-validate-plan:
