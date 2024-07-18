@@ -1,4 +1,4 @@
-# terrform scripts
+# terrform scripts for iaac
 resource "aws_vpc" "sap-vpc" {
   cidr_block = var.cidr-range
 }
