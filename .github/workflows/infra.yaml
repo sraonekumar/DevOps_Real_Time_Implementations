@@ -21,6 +21,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
 
+      - name: Set up SSH KEY FOR AWS
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUB_KEY }}" | base64 -d > /id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Configure AWS credentials
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
