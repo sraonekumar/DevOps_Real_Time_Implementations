@@ -23,8 +23,9 @@ jobs:
 
       - name: Set up SSH KEY FOR AWS
         run: |
-          echo "${{ secrets.SSH_PUB_KEY }}" | base64 -d > /id_rsa.pub
-          chmod 600 /id_rsa
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUB_KEY }}" | base64 -d > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Configure AWS credentials
         run: |
