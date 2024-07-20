@@ -26,17 +26,16 @@ jobs:
       # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runner's shell
-      - name: Run a one-line script
-        run: |
-          export HELM_KUBEAPISERVER=${{ secrets.OPENSHIFT_SERVER }}
-          export HELM_KUBETOKEN=${{ secrets.OPENSHIFT_TOKEN }}
-
       # Runs Helm installation
       - uses: azure/setup-helm@v4.2.0
         with:
           version: latest # default is latest (stable)
         id: install
+
+      - name: Helm Env
+        run: |
+          helm env --kube-apiserver ${{ secrets.OPENSHIFT_SERVER }}
+          helm env --kube-token ${{ secrets.OPENSHIFT_TOKEN }}
 
       # Add required Helm repos and update
       - name: Add required Helm repos and update
