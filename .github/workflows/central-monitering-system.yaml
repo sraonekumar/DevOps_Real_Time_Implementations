@@ -55,9 +55,9 @@ jobs:
       #   id: install
       - name: Installing Helm
         run: |
-        sudo apt-get update
-        sudo apt-get install helm
-        helm --verison
+          sudo apt-get update
+          sudo apt-get install helm
+          helm --verison
 
       # Add required Helm repos and update
       - name: Add required Helm repos and update
