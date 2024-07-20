@@ -19,25 +19,8 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a job called "Cluster_Setup" to set up the cluster
-  Cluster_Setup:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate and set context
-        uses: redhat-actions/oc-login@v1
-        with:
-          # URL to your OpenShift cluster
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          # Authentication Token
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          # Disables SSL cert checking
-          insecure_skip_tls_verify: true
-          # Optional: set your Kubernetes context's current namespace after logging in
-          namespace: sraonekumar-dev
 
   Helm_install:
-
-    needs: [Cluster_Setup]
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -52,12 +35,6 @@ jobs:
           version: latest # default is latest (stable)
         id: install
 
-      - name: Helm Env 
-        run: |
-          export KUBECTL_SERVER=${{ secrets.OPENSHIFT_SERVER }}
-          export KUBECTL_TOKEN=${{ secrets.OPENSHIFT_TOKEN }}
-
-
       # Add required Helm repos and update
       - name: Add required Helm repos and update
         run: |
@@ -70,9 +47,9 @@ jobs:
 
       # Install Prometheus
       - name: Install Prometheus
-        run: helm install -f ./prometheus/prometheus.yaml prometheus prometheus-community/prometheus --namespace sraonekumar-dev
+        run: helm install -f ./prometheus.yaml prometheus prometheus-community/prometheus --kube-apiserver=${{ secrets.OPENSHIFT_SERVER }} --kube-token=${{ secrets.OPENSHIFT_TOKEN }} --kube-insecure-skip-tls-verify=true  --namespace sraonekumar-dev
 
       # Install Grafana
       - name: Install Grafana
-        run: helm install my-grafana grafana/grafana --namespace sraonekumar-dev
+        run: helm install my-grafana grafana/grafana --kube-apiserver=${{ secrets.OPENSHIFT_SERVER }} --kube-token=${{ secrets.OPENSHIFT_TOKEN }} --kube-insecure-skip-tls-verify=true  --namespace sraonekumar-dev
 
