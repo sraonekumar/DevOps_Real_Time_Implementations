@@ -47,7 +47,7 @@ jobs:
 
       # Install Prometheus
       - name: Install Prometheus
-        run: helm install -f ./prometheus.yaml prometheus prometheus-community/prometheus --kube-apiserver=${{ secrets.OPENSHIFT_SERVER }} --kube-token=${{ secrets.OPENSHIFT_TOKEN }} --kube-insecure-skip-tls-verify=true  --namespace sraonekumar-dev
+        run: helm install -f ./prometheus/prometheus.yaml prometheus prometheus-community/prometheus --kube-apiserver=${{ secrets.OPENSHIFT_SERVER }} --kube-token=${{ secrets.OPENSHIFT_TOKEN }} --kube-insecure-skip-tls-verify=true  --namespace sraonekumar-dev
 
       # Install Grafana
       - name: Install Grafana
