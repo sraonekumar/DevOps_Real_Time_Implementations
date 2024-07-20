@@ -1,0 +1,90 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "CIMS" ]
+    paths-ignore:
+      - '.github/workflows/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+
+  Cluster_Setup:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate and set context
+        uses: redhat-actions/oc-login@v1
+      #   env:
+      # # These can be stored in secrets, if desired.
+      #     OPENSHIFT_USER: my-username
+      #     OPENSHIFT_NAMESPACE: my-namespace
+
+        with:
+      # URL to your OpenShift cluster.
+      # Refer to Step 2.
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+
+      # Authentication Token. Can use username and password instead.
+      # Refer to Step 3.
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+
+      # Credentials, if desired instead of token.
+      # Username and password override token if they are set.
+      # openshift_username: ${{ env.OPENSHIFT_USER }}
+      # openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
+
+      # Disables SSL cert checking. Use this if you don't have the certificate authority data.
+          insecure_skip_tls_verify: true
+      # This method is more secure, if the certificate from Step 4 is available.
+        # certificate_authority_data: ${{ secrets.CA_DATA }}
+
+      # Optional - this sets your Kubernetes context's current namespace after logging in.
+          namespace: sraonekumar-dev
+          
+  Helm_install:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Helm Installation
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: '<version>' # default is latest (stable)
+        id: install
+
+      - name: Add require helm repos and update
+        run: |
+             echo "Adding Prometehus helm repo"
+             helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+             echo "Adding Grafana helm repo"
+             helm repo add grafana https://grafana.github.io/helm-charts
+             echo "Helm Update"
+             helm repo update
+
+      - name: Install Prometeus
+        run:  helm install -f ./prometehus/prometheus.yaml prometheus prometheus-community/prometheus --namespace sraonekumar-dev
+
+      - name: Install Grafana
+        run:  helm install my-grafana grafana/grafana --namespace sraonekumar-dev
+
+      - name: List Pods
+        uses: redhat-actions/oc-login@v1
+        run:  oc get pods -n sraonekumar-dev
