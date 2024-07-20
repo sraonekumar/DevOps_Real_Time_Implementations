@@ -54,8 +54,9 @@ jobs:
 
       - name: Helm Env 
         run: |
-          helm env --kube-apiserver ${{ secrets.OPENSHIFT_SERVER }}
-          helm env --kube-token ${{ secrets.OPENSHIFT_TOKEN }}
+          export KUBECTL_SERVER=${{ secrets.OPENSHIFT_SERVER }}
+          export KUBECTL_TOKEN=${{ secrets.OPENSHIFT_TOKEN }}
+
 
       # Add required Helm repos and update
       - name: Add required Helm repos and update
