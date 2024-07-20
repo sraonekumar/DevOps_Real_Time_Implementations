@@ -7,7 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the "CIMS" branch
   push:
     branches: 
-      - "CIMS"
+      - "CMIS"
     paths-ignore:
       - '.github/workflows/**'
 
