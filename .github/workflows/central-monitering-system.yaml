@@ -49,15 +49,10 @@ jobs:
         run: echo Hello, world!
 
       # Runs Helm installation
-      # - uses: azure/setup-helm@v4.2.0
-      #   with:
-      #     version: '<version>' # default is latest (stable)
-      #   id: install
-      - name: Installing Helm
-        run: |
-          sudo apt-get update
-          sudo apt-get install helm
-          helm --verison
+      - uses: azure/setup-helm@v4.2.0
+        with:
+          version: latest # default is latest (stable)
+        id: install
 
       # Add required Helm repos and update
       - name: Add required Helm repos and update
